@@ -1,0 +1,7 @@
+DEFAULTALG = 4
+BARTHREADS = 4
+presolve = 1
+BARSTART = 2
+Crossover = 1
+scaling = 5
+

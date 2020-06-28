@@ -1,0 +1,37 @@
+*=============================================================================*
+* INITMTY.jrc contains the declaration of new reporting parameters
+*=============================================================================*
+* Define stochastic controls
+$SET SW1 '' SET TMP
+$IFI %STAGES%==YES $SET TMP 'S' SET SW1 ALLSOW,
+$IFI %SPINES%==YES $SET TMP 'S' SET SW1 ALLSOW,
+$SETGLOBAL VAR_UC YES
+*-----------------------------------------------------------------------------
+* New parameters
+ 
+* Calculation of Power and annual operating Hours
+ PARAMETER %TMP%F_INP(%SW1%R,ALLYEAR,T,P,C,S)  //;
+ PARAMETER %TMP%F_OUTP(%SW1%R,ALLYEAR,T,P,C,S) //;
+ PARAMETER %TMP%PAR_ACTLH(%SW1%R,LL,P)    //;
+
+* Calculation of Near Optimality
+ PARAMETER %TMP%PAR_NCAPNO(%SW1%R,ALLYEAR,P)      //;
+
+* UC contribution to CBA
+ PARAMETER %TMP%PAR_UCCAP(%SW1%UC_N,*,*,*)         //;
+ PARAMETER %TMP%PAR_UCNCAP(%SW1%UC_N,*,*,*)        //;
+ PARAMETER %TMP%PAR_UCFLO(%SW1%UC_N,*,*,*,*,*,*)   //;
+ PARAMETER %TMP%PAR_UCACT(%SW1%UC_N,*,*,*,*,*)     //;
+ PARAMETER %TMP%PAR_UCCOMPRD(%SW1%UC_N,*,*,*,*)    //;
+ PARAMETER %TMP%PAR_UCCOMNET(%SW1%UC_N,*,*,*,*)    //;
+ PARAMETER %TMP%PAR_UCRHS(%SW1%UC_N,*,*)           //;
+
+* Calculation of impact direct bounds
+ PARAMETER %TMP%PAR_BNDCAP(%SW1%R,T,P)                //;
+ PARAMETER %TMP%PAR_BNDACT(%SW1%R,T,P,S)              //;
+ PARAMETER %TMP%PAR_BNDCUMACTFLO(%SW1%R,P,C)          //;
+
+
+ SET COM_GRP / ELCHIG, ELCMED, ELCLOW, INDELC, GN1 /;
+ SET COM / ELCHIG, ELCMED, ELCLOW, INDELC, GN1 /;
+ SET CUR / EUR10 /;

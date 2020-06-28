@@ -1,0 +1,127 @@
+*=============================================================================*
+* RPT_EXT.jrc: Additional reporting routines
+*  %1 - Prefix for parameter names (optional)
+*  %2 - SOW, (optional)
+*  %3 - %SOW%
+*=============================================================================*
+* Define stochastic controls
+$SET SW1 '' SET SW2 '' SET TMP
+$IFI %STAGES%==YES $SET SW1 'SOW,' SET SW2 ',W)*SW_UNPB(T,W)' SET TMP S
+
+*-----------------------------------------------------------------------------
+* Filter out small values (might be useful to implement into standard code?)
+* CPLEX Barrier takes a lot of time for the crossover of large models with many regions, commodities and user constraints.
+* JRC-EU-TIMES runs fast without crossover and with very similar results as with crossover.
+* One disadvantage is that without crossover, many variables that should be zero, and normally do not show up in the solution,
+* now have a very small value. Indeed, you do not get a basic solution but a solution that is very close to a basic solution.
+* To remove these small values from the results, we have this code.
+* More information on extension of TIMES code is on https://iea-etsap.org/docs/Documentation_for_the_TIMES_Model-Part-III_July-2016.pdf
+
+  Z=RPT_OPT('ACT','9');
+  IF(Z > 0, %TMP%PAR_ACTL(%SW1%R,V,T,P,S)$((%TMP%PAR_ACTL(%SW1%R,V,T,P,S)<Z)$%TMP%PAR_ACTL(%SW1%R,V,T,P,S)) = 0);
+  Z=RPT_OPT('CAP','9');
+  IF(Z > 0, %TMP%PAR_CAPL(%SW1%R,T,P)$((%TMP%PAR_CAPL(%SW1%R,T,P)<Z)$%TMP%PAR_CAPL(%SW1%R,T,P)) = 0);
+  Z=RPT_OPT('FLO','9');
+  IF(Z > 0,
+   %TMP%F_OUT(%SW1%R,V,T,P,C,S)$((ABS(%TMP%F_OUT(%SW1%R,V,T,P,C,S))<Z)$%TMP%F_OUT(%SW1%R,V,T,P,C,S)) = 0;
+   %TMP%F_IN(%SW1%R,V,T,P,C,S)$((ABS(%TMP%F_IN(%SW1%R,V,T,P,C,S))<Z)$%TMP%F_IN(%SW1%R,V,T,P,C,S)) = 0);
+
+*-----------------------------------------------------------------------------
+* Operating hours (useful to quickly spot very high or low operating hours)
+*-----------------------------------------------------------------------------
+* assuming 31.536 PJ per GW
+   %TMP%PAR_ACTLH(%SW1%R,T,P)$%TMP%PAR_CAPL(%SW1%R,T,P) = SUM(V,SUM(S,%TMP%PAR_ACTL(%SW1%R,V,T,P,S)))/(%TMP%PAR_CAPL(%SW1%R,T,P)*31.536)*8760;	
+   %TMP%PAR_ACTLH(%SW1%R,T,P)$%TMP%PAR_PASTI(%SW1%R,T,P,'0') = SUM(V,SUM(S,%TMP%PAR_ACTL(%SW1%R,V,T,P,S)))/((%TMP%PAR_PASTI(%SW1%R,T,P,'0')+%TMP%PAR_PASTI(%SW1%R,T,P,'¤'))*31.536)*8760;
+
+*-----------------------------------------------------------------------------
+* Near optimality
+*-----------------------------------------------------------------------------
+* We calculate only for CAPEX >0.1 MEUR (per GW or PJ)
+* Still to be done is to make currency flexible
+   %TMP%PAR_NCAPNO(%SW1%R,T,P)$(OB_ICOST(R,P,'EUR10',T)>0.1) = %TMP%PAR_NCAPM(%SW1%R,T,P)/OB_ICOST(R,P,'EUR10',T)*100;
+
+*-----------------------------------------------------------------------------
+* Power based flow for electricity assuming 31.536 PJ per GW
+*-----------------------------------------------------------------------------
+   %TMP%F_INP(%SW1%R,V,T,P,'ELCHIG',S)$(%TMP%F_IN(%SW1%R,V,T,P,'ELCHIG',S)) = %TMP%F_IN(%SW1%R,V,T,P,'ELCHIG',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_INP(%SW1%R,V,T,P,'ELCMED',S)$(%TMP%F_IN(%SW1%R,V,T,P,'ELCMED',S)) = %TMP%F_IN(%SW1%R,V,T,P,'ELCMED',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_INP(%SW1%R,V,T,P,'ELCLOW',S)$(%TMP%F_IN(%SW1%R,V,T,P,'ELCLOW',S)) = %TMP%F_IN(%SW1%R,V,T,P,'ELCLOW',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_INP(%SW1%R,V,T,P,'INDELC',S)$(%TMP%F_IN(%SW1%R,V,T,P,'INDELC',S)) = %TMP%F_IN(%SW1%R,V,T,P,'INDELC',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_INP(%SW1%R,V,T,P,'GN1',S)$(%TMP%F_IN(%SW1%R,V,T,P,'GN1',S)) = %TMP%F_IN(%SW1%R,V,T,P,'GN1',S)/G_YRFR(R,S)/31.536;
+
+   %TMP%F_OUTP(%SW1%R,V,T,P,'ELCHIG',S)$(%TMP%F_OUT(%SW1%R,V,T,P,'ELCHIG',S)) = %TMP%F_OUT(%SW1%R,V,T,P,'ELCHIG',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_OUTP(%SW1%R,V,T,P,'ELCMED',S)$(%TMP%F_OUT(%SW1%R,V,T,P,'ELCMED',S)) = %TMP%F_OUT(%SW1%R,V,T,P,'ELCMED',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_OUTP(%SW1%R,V,T,P,'ELCLOW',S)$(%TMP%F_OUT(%SW1%R,V,T,P,'ELCLOW',S)) = %TMP%F_OUT(%SW1%R,V,T,P,'ELCLOW',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_OUTP(%SW1%R,V,T,P,'INDELC',S)$(%TMP%F_OUT(%SW1%R,V,T,P,'INDELC',S)) = %TMP%F_OUT(%SW1%R,V,T,P,'INDELC',S)/G_YRFR(R,S)/31.536;
+   %TMP%F_OUTP(%SW1%R,V,T,P,'GN1',S)$(%TMP%F_OUT(%SW1%R,V,T,P,'GN1',S)) = %TMP%F_OUT(%SW1%R,V,T,P,'GN1',S)/G_YRFR(R,S)/31.536;
+ 		
+*-----------------------------------------------------------------------------
+* User constraint contribution to CBA
+*-----------------------------------------------------------------------------
+* to report rents or losses from binding UCs. I find this very useful
+* 	1. to debug
+* 	2. to identify the role of UCs in making a process competitive (it is produced for each process)
+* 	3. to look at the energy system from the dual solution perspective based on prices.
+* 	   (if all works well, the total dual value which should equal the total cost.)
+* 	4. to compare quickly the importance of UCs.
+
+* The key knowledge to calculate all this is the following multiplication:
+* the marginal value of the UC  x  UC variable x the coefficient a particular process has in that UC.
+* For example: PAR_UCCAP(UC_N,R,T,P) = (-1)*PAR_UCSM(UC_N,R,T,'NONE')*UC_CAP(UC_N,'LHS',R,T,P)*PAR_CAPL(%SW1%R,T,P);
+
+* we do not have constraints with UCRHS or UCRHSR
+* we choose Germany arbitrary, region = "DE"
+  LOOP(SAMEAS('DE',R),
+  %TMP%PAR_UCSM(%SW1%UC_N,'NONE',T,'NONE')      $= %VART%_UCT.M(UC_N,T%SW2%)*(1/COEF_PVT(R,T));
+  %TMP%PAR_UCSM(%SW1%UC_N,'NONE',T,S)           $= %VART%_UCTS.M(UC_N,T,S%SW2%)*(1/COEF_PVT(R,T)));
+  %TMP%PAR_UCSM(%SW1%UC_N,R,T,'NONE')           $= %VART%_UCRT.M(UC_N,R,T%SW2%)*(1/COEF_PVT(R,T));
+  %TMP%PAR_UCSM(%SW1%UC_N,R,T,S)                $= %VART%_UCRTS.M(UC_N,R,T,S%SW2%)*(1/COEF_PVT(R,T));
+
+* Most UC related with FLO are with RHSRTS but some are with RHSRT or with RHSTS
+* For some reason using PAR_UCSM did not work for PAR_UCFLO (gams is hanging, it does not give a message though)
+   %TMP%PAR_UCCAP(%SW1%UC_N,R,T,P) $= (-1)*%TMP%PAR_UCSM(%SW1%UC_N,R,T,'NONE')*UC_CAP(UC_N,'LHS',R,T,P)*%TMP%PAR_CAPL(%SW1%R,T,P);
+   %TMP%PAR_UCCAP(%SW1%UC_N,R,T,P) $= (-1)*%TMP%PAR_UCSM(%SW1%UC_N,R,T,'NONE')*UC_CAP(UC_N,'LHS',R,T,P)*%TMP%PAR_PASTI(%SW1%R,T,P,'0');
+
+   %TMP%PAR_UCNCAP(%SW1%UC_N,R,T,P) $= (-1)*%TMP%PAR_UCSM(%SW1%UC_N,R,T,'NONE')*UC_NCAP(UC_N,'LHS',R,T,P)*%TMP%PAR_NCAPL(%SW1%R,T,P);
+
+* FOR FULL RESULTS one can also include
+*  %TMP%PAR_UCFLO(%SW1%UC_N,R,V,T,P,C,S)$(NOT %VART%_UCRTS.M(UC_N,R,T,'ANNUAL')) $= (-1)*%VART%_UCRTS.M(UC_N,R,T,S%SWS%)*(1/COEF_PVT(R,T))*UC_FLO(UC_N,'LHS',R,T,P,C,S)*PAR_FLO(R,V,T,P,C,S);
+*  %TMP%PAR_UCFLO(%SW1%UC_N,R,V,T,P,C,'ANNUAL') $= (-1)*%VART%_UCRTS.M(UC_N,R,T,'ANNUAL')*(1/COEF_PVT(R,T))*UC_FLO(UC_N,'LHS',R,T,P,C,'ANNUAL')*SUM(S,PAR_FLO(R,V,T,P,C,S));
+* This is to correct for following problem.
+* Flo reporting can be at commodity level and this creates a discrepancy (example:  UC_FLO and marginal is at annual level BUT PAR_FLO level is at daynite level). To be checked.
+* Same is true for ACT. For example for the UCE_Limit_PEC constraint, all is annual except the PAR_FLO
+* So far, no UC exists with UC_FLO or UC_ACT at Seasonal level where than the same problem could appear.
+* TO BE REMOVED FOR FULL RESULTS
+*   %TMP%PAR_UCFLO(%SW1%UC_N,R,V,T,P,C,'ANNUAL') $= (-1)*%VART%_UCRT.M(UC_N,R,T%SWS%)*(1/COEF_PVT(R,T))*UC_FLO(UC_N,'LHS',R,T,P,C,'ANNUAL')*SUM(S,PAR_FLO(R,V,T,P,C,S));
+*   %TMP%PAR_UCFLO(%SW1%UC_N,R,V,T,P,C,S) $= (-1)*%VART%_UCTS.M(UC_N,T,S%SWS%)*(1/COEF_PVT(R,T))*UC_FLO(UC_N,'LHS',R,T,P,C,S)*PAR_FLO(R,V,T,P,C,S);
+*   %TMP%PAR_UCFLO(%SW1%UC_N,R,V,T,P,C,'ANNUAL') $= (-1)*%VART%_UCTS.M(UC_N,T,'ANNUAL')*(1/COEF_PVT(R,T))*UC_FLO(UC_N,'LHS',R,T,P,C,'ANNUAL')*SUM(S,PAR_FLO(R,V,T,P,C,S));
+* I do not know any constraint with a mismatch between timeslice level for UCTS
+
+   %TMP%PAR_UCACT(%SW1%UC_N,R,V,T,S,P)$(NOT %VART%_UCRTS.M(UC_N,R,T,'ANNUAL'%SWS%)) $= (-1)*%VART%_UCRTS.M(UC_N,R,T,S%SWS%)*(1/COEF_PVT(R,T))*UC_ACT(UC_N,'LHS',R,T,P,S)*%TMP%PAR_ACTL(%SW1%R,V,T,P,S);
+   %TMP%PAR_UCACT(%SW1%UC_N,R,V,T,'ANNUAL',P) $= (-1)*%VART%_UCRTS.M(UC_N,R,T,'ANNUAL'%SWS%)*(1/COEF_PVT(R,T))*UC_ACT(UC_N,'LHS',R,T,P,'ANNUAL')*SUM(S,%TMP%PAR_ACTL(%SW1%R,V,T,P,S));
+   %TMP%PAR_UCACT(%SW1%UC_N,R,V,T,'ANNUAL',P) $= (-1)*%VART%_UCRT.M(UC_N,R,T%SWS%)*(1/COEF_PVT(R,T))*UC_ACT(UC_N,'LHS',R,T,P,'ANNUAL')*SUM(S,%TMP%PAR_ACTL(%SW1%R,V,T,P,S));
+   %TMP%PAR_UCACT(%SW1%UC_N,R,V,T,S,P) $= (-1)*%VART%_UCTS.M(UC_N,T,S%SWS%)*(1/COEF_PVT(R,T))*UC_ACT(UC_N,'LHS',R,T,P,S)*%TMP%PAR_ACTL(%SW1%R,V,T,P,S);
+   %TMP%PAR_UCACT(%SW1%UC_N,R,V,T,'ANNUAL',P) $= (-1)*%VART%_UCTS.M(UC_N,T,'ANNUAL'%SWS%)*(1/COEF_PVT(R,T))*UC_ACT(UC_N,'LHS',R,T,P,'ANNUAL')*SUM(S,%TMP%PAR_ACTL(%SW1%R,V,T,P,S));
+
+* I did not try or include to include UC_COMPRD or UC_COMNET because in most of those equations, the counterpart with UC_FLO is already represented for example in the renewable target.
+*  %TMP%PAR_UCCOMPRD(%SW1%UC_N,R,T,C,S) $= %TMP%PAR_UCSM(%SW1%UC_N,R,T,S)*UC_COM(UC_N,'PRD','LHS',R,T,C,S,'COMPRD')*%TMP%PAR_COMPRDL(%SW1%R,T,C,S);
+*  %TMP%PAR_UCCOMNET(%SW1%UC_N,R,T,C,S) $= %TMP%PAR_UCSM(%SW1%UC_N,R,T,S)*UC_COM(UC_N,'NET','LHS',R,T,C,S,'COMNET')*%TMP%PAR_COMNETL(%SW1%R,T,C,S);
+
+* This produces the rents or losses from limits at RHST and RHSTS level
+ LOOP(SAMEAS('DE',R),
+   %TMP%PAR_UCRHS(%SW1%UC_N,T,'NONE')      $= %VART%_UCT.L(UC_N,T%SWS%)*%VART%_UCT.M(UC_N,T%SWS%)*(1/COEF_PVT(R,T));
+   %TMP%PAR_UCRHS(%SW1%UC_N,T,S)           $= %VART%_UCTS.L(UC_N,T,S%SWS%)*%VART%_UCTS.M(UC_N,T,S%SWS%)*(1/COEF_PVT(R,T)));
+
+* This is to include the bounds set by the user directly so not via user constraints
+* Reported only for sufficiently large contributions
+   %TMP%PAR_BNDCAP(%SW1%R,T,P)$(abs(VAR_CAP.L(R,T,P)*VAR_CAP.M(R,T,P))>1) $= VAR_CAP.L(R,T,P)*VAR_CAP.M(R,T,P)*(1/COEF_PVT(R,T));
+   %TMP%PAR_BNDACT(%SW1%R,T,P,S)$(ACT_BND(R,T,P,S,'LO') or ACT_BND(R,T,P,S,'UP') or ACT_BND(R,T,P,S,'FX')) $= SUM(V,VAR_ACT.L(R,V,T,P,S)*VAR_ACT.M(R,V,T,P,S)*(1/COEF_PVT(R,T)));
+   %TMP%PAR_BNDCUMACTFLO(%SW1%R,P,C)$(abs(VAR_CUMFLO.L(R,P,C,'2005','2200')*VAR_CUMFLO.M(R,P,C,'2005','2200'))>1) $= VAR_CUMFLO.L(R,P,C,'2005','2200')*VAR_CUMFLO.M(R,P,C,'2005','2200')/10;
+* So far very limited processes with a FLO_BND  %TMP%PAR_BNDFLO(R,T,P) otherwise very similar to BNDACT
+
+*-----------------------------------------------------------------------------
+* Financial flows
+* to report financial flows, the standard reporting of VAL_FLO can be used (more or less the IN and OUT flows multiplied by their respective marginal values)
+* VAL_FLO does not have stochastic variant, so cannot report it under STAGES
+* This only works correctly with using the option for flow reporting at COM timeslices.
+*-----------------------------------------------------------------------------

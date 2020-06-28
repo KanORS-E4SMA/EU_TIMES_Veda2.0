@@ -1,0 +1,45 @@
+Emissions in JRC-EU-TIMES
+-------------------------
+JRC-EU-TIMES was designed to include CO2 and other emissions from energy related activities.
+It includes now data for energy related CO2 only.
+
+The total net emitted CO2 can be calculated as:
+Var_comNet TOTCO2 = RSDCO2N + COMCO2N + AGRCO2N + SE_TRACO2N + INDCO2N + INDCO2P + ELCCO2N + SUPCO2N
+For now, the model does not include investment related CO2 (ELCCO2I), ELCCO2P or SUPCO2P
+
+CCUS
+----
+Total captured emissions are:
+SNKCO2N = ELCSCO2N + INDSCO2N + SUPSCO2N + atmpospheric CO2 captured from TOTCO2
+ELSCO2N, INDSCO2N and SUPSCO2N can be from a fossil or biogenic source.
+
+SNKCO2N can be traded, can go to "sinks" (permanent underground storage) or be transformed into SINKCCU.
+SNKCO2N = sum of all MINSNK* activities + SNKCCU.
+
+SNKCCU can be the used to produce OILKER, OILDSL, OILGSL or OILNAP.
+These are again used as final energy in all sectors, becomes again xxxCO2N, except for OILNAP that is a non-energy use.
+
+The total CO2 produced can be calculated as:
+= Var_FOut TOTCO2 + ELCSCO2N + INDSCO2N + SUPSCO2N
+
+EXAMPLE OF CO2 results from the run "JRC-EU-TIMES 02_LCEO_Net-Zero_Carbon"
+--------------------------------------------------------------------------
+Total captured CO2 = 621 Mton (DAC = 370 Mton, from biomass = 251 Mton)
+out of which permanently stored = MINSNK* = 300 Mton (limit)
+out of which is reused as energy fuel = 225 Mton
+out of which is stored as material (or non energy use) = 96 Mton
+
+CO2 from use of fossil = 171 Mton
+CO2 from biomass without capturing = 672 Mton
+
+PROCESS EMISSIONS FROM INDUSTRY
+-------------------------------
+INDCO2P are "aggregated" to ETSCO2 with COMAGG.
+This means that the sum of INDCO2P emissions is added to the ETSCO2 group.
+INDCO2P emissions are visible as a total, as part of ETSCO2 under the process "-" 
+
+COMMODITIES THAT ARE NOT USED
+-----------------------------
+SE_xxxCO2N other than SE_TRACO2N are not useful.
+SE_TRACO2N should be used and not TRACO2N.
+TRACO2N is only useful to estimate the emissions from vehicles, but mind biofuels are included.

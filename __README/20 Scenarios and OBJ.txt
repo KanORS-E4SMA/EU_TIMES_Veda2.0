@@ -1,0 +1,84 @@
+Scenarios and JRC publications
+------------------------------
+In-house scenarios have been developed with the JRC-EU-TIMES model to explore energy prospects within the EU.
+More information about the scenario design can be found in JRC publications.
+However, this most recent versions of scenarios may differ in following dimensions:
+-calibration of existing stock, now linked to JRC-IDEES database
+-the 2030 targets
+-level of energy related CO2 emissions in 2050, now 100% reduction
+-the sales of EV/PHEV, now with less restricting limits in the Zero Carbon scenarios.
+
+Common assumptions
+------------------
+-The scenarios are aligned with following inputs of the Reference Scenario 2016 in the long run, up to 2050:
+	oEnergy services demand or demand growth
+	oFuel prices
+	oBuilding stock projection
+
+-Targets summary for 2030:
+CO2: 	-40% compared to 1990
+RES: 	>32%
+EE: 	>32.5% implemented as Gross inland consumption < 1395 Mtoe, as in Baseline LTS, nov 2018
+ETS: 	-47% CO2 compared to 2005, as in Baseline LTS, nov 2018
+ESD: 	-30% CO2 compared to 2005 for transport, buildings, agriculture and waste, Effort Sharing legislation
+
+-Targets summary for 2050:
+EE: 	<1492 Mtoe Gross inland consumption, as in REF2016
+ETS: 	<718 Mton CO2, as in Baseline LTS, nov 2018
+
+-Energy Efficiency efforts in 2030: a 32.5% reduction of primary energy consumption from the projections for the year 2030 
+compared to the 2007 baseline scenario (a 32.5% reduction from 1887 Mtoe). This is done by limiting the level 
+of gross inland consumption in 2030 to 1386 Mtoe (result of EUCO3232.5). 
+Gross inland consumption is higher than the primary energy because it also includes the non-energy uses.
+-Renewable energy sources target minimum 32% of final energy consumption.
+-ESD MS specific "targets" from proposal COM 2016/482. 
+This is different from the outputs of the EUCO30 scenario where there is a cost optimal MS effort sharing.
+-CCUS technologies enter the market not before 2030
+-CCU (Carbon Utilisation) technologies are allowed, the main of which is the 
+production of diesel/kerosene by combining hydrogen and CO2.
+-Geological (underground) CO2 storage is only possible in some countries, in line with [1], 
+
+Nuclear assumptions
+-------------------
+The  nuclear  fleet,  including  the  replacement  of  plants  due  for  retirement,  is  modelled  on  its 
+economic  merit  and  in  competition  with  other  energy  sources  for  power  generation  except  for 
+Member States with legislative provisions on nuclear phase out. Several constraints are put on the 
+model  such  as  decisions  of  Member  States  not  to  use  nuclear  at  all  (Austria,  Cyprus,  Denmark, 
+Estonia, Greece, Ireland, Latvia, Luxembourg, Malta and Portugal) and closure of existing plants in 
+some  Member  States  according  to  agreed  schedules  (e.g.  Germany).  Nuclear  investments  are 
+possible in all the other countries. In France, the total nuclear capacity is limited to 65GW, 
+in Spain to 8GW and in Sweden to 9.4GW.
+JRC-EU-TIMES has the option to extend the lifetime of existing nuclear power plants up to 60 years 
+in the countries without a phase-out policy.
+
+01_Baseline
+-----------
+It is a "business-as-usual" scenario which does not envision any dedicated efforts aimed at 
+stabilising the atmospheric concentration of GHGs. In this scenario, the EU is assumed 
+to reduce its energy-related CO2 emissions by 47% by 2050 with respect to 1990, as in the EU Reference Scenario 2016.
+It is the only scenario with non-elastic demand. In a baseline scenario, users have to make sure that
+the important drivers of the model (demand, EE, RES, CO2) are consistent.
+Objective function: 75 101 674
+
+02_Zero_Carbon
+--------------
+This scenario achieves 100 % CO2 reduction by 2050.
+It limits the underground CO2 storage to 300 Mt/year, however CCU is unlimited.
+In terms of scenario design, the Net-Zero is comparable to the scenario EC 2050 LTS 1.5TECH.
+Up to 2020 fixed to the baseline and elastic demand with reference prices from the baseline.
+Objective function: 85 982 820
+
+03_Zero_Carbon_HighCCS
+----------------------
+This scenario is exactly the same as the Zero_Carbon, however 
+the underground CO2 storage can be up to 1000 Mt/year.
+In a world with less deployment of renewables, also the techno-economic
+parameters are different.
+"Solution available but not proven optimal due to numerical difficulties."
+We could not identify a major non-optimality, especially given that we run without crossover.
+The solution is useful for EU wide energy system analysis.
+Objective function: 80 769 539
+
+[1] European Commission, “Annex to the REPORT FROM THE COMMISSION TO THE EUROPEAN PARLIAMENT 
+AND THE COUNCIL on Implementation of Directive 2009/31/EC on the Geological Storage of 
+Carbon Dioxide COM(2017) 37 final,” 2017.

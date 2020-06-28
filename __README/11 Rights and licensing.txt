@@ -1,0 +1,18 @@
+﻿Open JRC-EU-TIMES
+Download page: https://data.jrc.ec.europa.eu/collection/id-00287 
+Contact: JRC-DATA-ENERGY-UNION@ec.europa.eu
+
+This file explains the rights and licensing of the dataset JRC-EU-TIMES.
+JRC-EU-TIMES is fully open, nothing needs to be signed before you can use the database, however some terms apply when it is used.
+
+The datasets are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) licence. 
+You are free to share, copy and redistribute the datasets.
+You are also free to adapt, remix, transform, and build upon the datasets for any purpose, even commercially. Under the following terms:
+1.you must give appropriate credit: 
+- The name of the creator: Joint Research Centre of the European Commission
+- A copyright notice "© European Union, 1995-2019"
+- A license notice: CC BY 4.0.
+- A link to the material: https://data.jrc.ec.europa.eu/collection/id-00287 
+2.you must indicate if changes were made.
+3.you may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+https://creativecommons.org/licenses/by/4.0/   

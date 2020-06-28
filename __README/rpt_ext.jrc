@@ -1,0 +1,27 @@
+*=============================================================================*
+* RPT_EXT.jrc: Additional reporting routines
+*  %1 - Prefix for parameter names (optional)
+*  %2 - SOW, (optional)
+*  %3 - %SOW%
+*=============================================================================*
+* Define stochastic controls
+$SET SW1 '' SET SW2 '' SET TMP
+$IFI %STAGES%==YES $SET SW1 'SOW,' SET SW2 ',W)*SW_UNPB(T,W)' SET TMP S
+
+*-----------------------------------------------------------------------------
+* Filter out small values (might be useful to implement into standard code?)
+* CPLEX Barrier takes a lot of time for the crossover of large models with many regions, commodities and user constraints.
+* JRC-EU-TIMES runs fast without crossover and with very similar results as with crossover.
+* One disadvantage is that without crossover, many variables that should be zero, and normally do not show up in the solution,
+* now have a very small value. Indeed, you do not get a basic solution but a solution that is very close to a basic solution.
+* To remove these small values from the results, we have this code.
+* More information on extension of TIMES code is on https://iea-etsap.org/docs/Documentation_for_the_TIMES_Model-Part-III_July-2016.pdf
+
+  Z=RPT_OPT('ACT','9');
+  IF(Z > 0, %TMP%PAR_ACTL(%SW1%R,V,T,P,S)$((%TMP%PAR_ACTL(%SW1%R,V,T,P,S)<Z)$%TMP%PAR_ACTL(%SW1%R,V,T,P,S)) = 0);
+  Z=RPT_OPT('CAP','9');
+  IF(Z > 0, %TMP%PAR_CAPL(%SW1%R,T,P)$((%TMP%PAR_CAPL(%SW1%R,T,P)<Z)$%TMP%PAR_CAPL(%SW1%R,T,P)) = 0);
+  Z=RPT_OPT('FLO','9');
+  IF(Z > 0,
+   %TMP%F_OUT(%SW1%R,V,T,P,C,S)$((ABS(%TMP%F_OUT(%SW1%R,V,T,P,C,S))<Z)$%TMP%F_OUT(%SW1%R,V,T,P,C,S)) = 0;
+   %TMP%F_IN(%SW1%R,V,T,P,C,S)$((ABS(%TMP%F_IN(%SW1%R,V,T,P,C,S))<Z)$%TMP%F_IN(%SW1%R,V,T,P,C,S)) = 0);

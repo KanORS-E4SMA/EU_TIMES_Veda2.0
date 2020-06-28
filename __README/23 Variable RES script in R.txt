@@ -1,0 +1,18 @@
+
+https://limo.libis.be/primo-explore/fulldisplay?docid=LIRIAS2820684&context=L&vid=Lirias&search_scope=Lirias&tab=default_tab&lang=en_US&fromSitemap=1 
+
+JRC-EU-TIMES estimates negative residual loads (power surpluses) endogenously based on 
+the amount of VRE and demand within each of the 12 timeslices of the model. The equations that are used 
+for this estimation divides each timeslice in two sub-periods: one with and one without surplus. 
+These surpluses can be transformed into hydrogen for direct uses or into e-fuels. 
+These equations are based on a country-specific analysis with an hourly model 
+outside JRC-EU-TIMES that includes hundreds of possible combinations of wind and solar capacities, 
+using EMHIRES data, based on 30 years of meteodata. For this parametrization, it is assumed that 
+each country has a storage capacity equal to 5 hours of average power demand which is equivalent 
+to 40% of the full storage capacity if all cars would have a 30kWh battery. 
+
+One result of the statistical analysis was that in each country, the error of parametrising 
+the average surplus is smaller than the annual variations of the surpluses. 
+
+THE FILE SepDb-ZIET_VAR NEEDS TO BE FOLLOWED BY SepDb-ZIET_VAR_Nostor or SepDb-ZIET_VAR_Stor
+The R script will be made available as a separate database in this JRC data collection.

@@ -1,0 +1,153 @@
+$TITLE  TIMES -- VERSION 4.1.0
+OPTION RESLIM=50000, PROFILE=1, SOLVEOPT=REPLACE;
+OPTION ITERLIM=999999, LIMROW=100, LIMCOL=100, SOLPRINT=OFF;
+
+option LP=cplex;
+
+*--If you want to use an optimizer other than cplex/xpress, enter it here:
+*OPTION LP=MyOptimizer;
+
+$OFFLISTING
+*$ONLISTING
+
+* activate validation to force VAR_CAP/COMPRD
+$SET VALIDATE 'NO'
+* reduction of equation system
+$SET REDUCE   'YES'
+*--------------------------------------------------------------*
+* BATINCLUDE calls should all be with lower case file names!!! *
+*--------------------------------------------------------------*
+
+* initialize the environment variables
+$ SET DSCAUTO YES 
+$   SET VDA YES 
+$   SET DEBUG                          'NO'
+$   SET DUMPSOL                        'NO'
+$   SET SOLVE_NOW                      'YES'
+$   SET MODEL_NAME                     'TIMES'
+$   IF DECLARED REG      $SET STARTRUN 'RESTART'
+$   IF NOT DECLARED REG  $SET STARTRUN 'SCRATCH'
+$SET XTQA YES
+* VAR_UC being set so that non-binding constraints appear in results
+$SET VAR_UC YES 
+ OPTION BRATIO=1;
+$ SET OBJ AUTO
+$ SET MID_YEAR YES
+$ SET OBLONG YES
+$SET DAMAGE NO
+$ SET SPOINT 1
+$ SET TIMESED NO
+$ SET STAGES NO
+$SET SOLVEDA 'YES'
+$SET VARCOST LIN
+$SET RETIRE YES
+$ SET RPT_FLOTS COM
+$ SET RPT_OPT NCAP.1 1
+
+* merge declarations & data
+$   ONMULTI
+
+* the times-slices MUST come 1st to ensure ordering OK
+$BATINCLUDE 01_baseline_ts.dd
+ 
+
+* perform fixed declarations
+$SET BOTIME 1940
+$BATINCLUDE initsys.mod
+
+* declare the (system/user) empties
+$   BATINCLUDE initmty.mod
+*$   BATINCLUDE initmty.mod DSC
+$IF NOT DECLARED REG_BNDCST $Abort "You need to use TIMES v2.3.1 or higher"
+
+$BATINCLUDE base.dd
+$BATINCLUDE 00_nuc-eu.dd
+$BATINCLUDE 01_nucchain-eu.dd
+$BATINCLUDE 10_techs_chp_sup_ind.dd
+$BATINCLUDE 11_techs_power.dd
+$BATINCLUDE 12_techs_powerlowaf.dd
+$BATINCLUDE 13_techs_ind-chp-boiler.dd
+$BATINCLUDE 14_techs_storage.dd
+$BATINCLUDE 15_techs_hydrogen.dd
+$BATINCLUDE 20_techs_tra.dd
+$BATINCLUDE 21_techs_other.dd
+$BATINCLUDE 22_techs_biorefineries.dd
+$BATINCLUDE 23_techs_ccus.dd
+$BATINCLUDE 30_techs_heatingcooling.dd
+$BATINCLUDE 31_techs_buildings_com.dd
+$BATINCLUDE 32_techs_buildings_rsd.dd
+$BATINCLUDE 40_trade-extraeu.dd
+$BATINCLUDE 41_trade-elc-extraeu.dd
+$BATINCLUDE 42_trade-elc-balkans.dd
+$BATINCLUDE 50_shalegas.dd
+$BATINCLUDE tradeparameters.dd
+$BATINCLUDE syssettings.dd
+$BATINCLUDE power_from_jrc-idees-2015.dd
+$BATINCLUDE rsdretfitsetup.dd
+$BATINCLUDE 01_baseline.dd
+$BATINCLUDE bau-general.dd
+$BATINCLUDE biopot_biom16_forestbau.dd
+$BATINCLUDE bunk_fuels_share.dd
+$BATINCLUDE co2_040.dd
+$BATINCLUDE co2target_nonets_2030.dd
+$BATINCLUDE co2targetets_2030.dd
+$BATINCLUDE demand_ref2016.dd
+$BATINCLUDE demand_com-fr.dd
+$BATINCLUDE emisco2.dd
+$BATINCLUDE enfr_extend.dd
+$BATINCLUDE enuc_plannedkilled.dd
+$BATINCLUDE enuc40_tlife.dd
+$BATINCLUDE eu-ren_target2020.dd
+$BATINCLUDE eu-ren_target2030bis.dd
+$BATINCLUDE forecastdelheat.dd
+$BATINCLUDE forecastdelheat_tert.dd
+$BATINCLUDE fuelprices_ref2016.dd
+$BATINCLUDE fuelprices-deliv.dd
+$BATINCLUDE hdd.dd
+$BATINCLUDE hydrogenustore.dd
+$BATINCLUDE kill_coalphaseout2030.dd
+$BATINCLUDE kill_fossil2oil.dd
+$BATINCLUDE kill_tb_elc-balkans-exclhr.dd
+$BATINCLUDE kill_zebras.dd
+$BATINCLUDE killsnkco2_11ms.dd
+$BATINCLUDE newhouses_and_retrofits.dd
+$BATINCLUDE nodestec.dd
+$BATINCLUDE nogreencerttrade.dd
+$BATINCLUDE refineries_lim.dd
+$BATINCLUDE sepdb-ziet_var.dd
+$BATINCLUDE sepdb-ziet_var_nostor.dd
+$BATINCLUDE sepdb-zietassumptions_drate.dd
+$BATINCLUDE tra_co2_target.dd
+$BATINCLUDE tra_scenarios.dd
+$BATINCLUDE tra_evphev_newsalesbase.dd
+$BATINCLUDE uc_eep_32_5_via_gec.dd
+$BATINCLUDE uc_elcpot.dd
+$BATINCLUDE uc_heatpumps_maxcap.dd
+$BATINCLUDE uc_heatpumps_mincap_lo.dd
+$BATINCLUDE uc_limitcoal.dd
+$BATINCLUDE uc_refscen16_data.dd
+$BATINCLUDE uc_rsd-com.dd
+$BATINCLUDE uc_storage.dd
+$BATINCLUDE uc_tra.dd
+$BATINCLUDE uc-biofuel.dd
+$BATINCLUDE uc-elc.dd
+$BATINCLUDE uc-ind.dd
+$BATINCLUDE x-nationalgrids.dd
+$BATINCLUDE x-yesgrid_bound.dd
+$BATINCLUDE x-yesgrid_maxinv.dd
+$BATINCLUDE x-yesgrid_noextrapoll.dd
+$BATINCLUDE zatemp_calibration.dd
+$BATINCLUDE zietassumptions.dd
+$BATINCLUDE zusetrneff_from_eurostat.dd
+
+SET MILESTONYR /2010,2012,2016,2020,2025,2030,2040,2050,2060/;
+$SET RUN_NAME '01_Baseline'
+
+
+$ SET VEDAVDD 'YES'
+
+* do the rest
+$ BATINCLUDE maindrv.mod mod
+
+
+

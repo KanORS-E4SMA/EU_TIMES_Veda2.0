@@ -1,0 +1,55 @@
+*All
+**Generates all supported file formats -- 
+*AlphaECP
+**Generates AlphaECP input file -- alpha.ecp
+*Ampl
+**Generates Ampl input file -- ampl.mod
+*AmplNLC
+**Generate Ampl NLC compatible file -- amplnlc.c
+*Analyze
+**Generates three text files for rows columns and matrix -- analyze.txt
+*AnalyzeS
+**Generates short form of Analyze -- analyzes.txt
+*Baron
+**Generates Baron input file -- gams.bar
+*CplexLP
+**Generate CPLEX LP format input file -- cplex.lp
+*CplexMPS
+**Generate CPLEX MPS format input file -- cplex.mps
+*Dict
+**Generate Convert to GAMS Dictionary -- dict.txt
+*DictMap
+**Generate Convert to GAMS Dictionary Map -- dictmap.gdx
+*FileList
+**Generate file list of file formats generated -- files.txt
+*FixedMPS
+**Generate fixed format MPS file -- fixed.mps
+*Gams
+**Generate GAMS scalar model. This is the default conversion format used. -- gams.gms
+*Lgo
+**Generate an LGO Fortran file -- lgomain.for
+*LindoMPI
+**Generate Lindo MPI file -- lindo.mpi
+*Lingo
+**Generate Lingo input file -- lingo.lng
+*LocalSolver
+**Generate LocalSolver input file (only with ConvertD) -- localsolver.lsp
+*LSPSol
+**Generate Output function in LocalSolver input file (only with ConvertD) -- lspsol.gms
+*Memo
+**Generate a memo file containing model statistics and files created. -- memo.txt
+*Minopt
+**Generate Minopt input file -- minopt.dat
+*NLP2dual
+**Generate the Wolfe dual of a smooth optimization model -- gamsdual.gms
+*NLP2MCP
+**Generates GAMS scalar MCP model -- gamsmcp.gms
+*OSiL
+**Generates Optimization Services instance Language (OSil) file -- osil.xml
+*Pyomo
+**Generates Pyomo Concrete scalar model -- gams.py
+*SFS
+**Generates Solver Foundation Services OML file -- sfs.oml
+*ViennaDag
+**Generate Vienna Dag input file -- vienna.dag
+jacobian

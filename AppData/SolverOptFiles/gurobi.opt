@@ -1,0 +1,64 @@
+*Limits the number of barrier iterations performed	infinity
+bariterlimit
+*Sets a target objective value	0
+cutoff	
+*Limits the number of simplex iterations performed	infinity
+iterationlimit	
+*Limits the number of MIP nodes explored	maxdouble
+nodelimit	
+*Limits the number of feasible solutions found	maxint
+solutionlimit
+*Limits the total time expended in seconds	GAMS reslim
+timelimit	
+
+**Tolerance options
+*Controls barrier termination	1e-8
+barconvtol	
+*Convergence tolerance for the barrier algorithm when solving a QCP	1e-6
+barqcpconvtol	
+*Primal feasibility tolerance	1e-6
+feasibilitytol	
+*Integer feasibility tolerance	1e-5
+intfeastol	
+*Threshold pivoting tolerance	0.0078125
+markowitztol	
+*Relative MIP optimality gap	GAMS optcr
+mipgap	
+*Absolute MIP optimality gap	GAMS optca
+mipgapabs	
+*Dual feasibility tolerance	1e-6
+optimalitytol	
+*limit on the amount of diagonal perturbation	1e-6
+psdtol	
+
+**Simplex options
+*Pricing norm variants	-1
+normadjust
+*Objective coefficients scaling	0
+objscale	
+*Magnitude of simplex perturbation when required	0.0002
+perturbvalue	
+*Quad precision computation in simplex	-1
+quad	
+*Enables or disables model scaling	1
+scaleflag	
+*Sifting within dual simplex	-1
+sifting	
+*LP method used to solve sifting sub-problems	-1
+siftmethod	
+*Determines variable pricing strategy	-1
+simplexpricing	
+
+**Barrier options
+*Limits the number of central corrections performed in each barrier iteration	-1
+barcorrectors	
+*Homogeneous barrier algorithm selection	-1
+barhomogeneous	
+*Chooses the barrier sparse matrix fill-reducing algorithm	-1
+barorder	
+*Determines the crossover strategy used to transform the barrier solution into a basic solution	-1
+crossover	
+*Determines the initial basis construction strategy for crossover	0
+crossoverbasis	
+*Determines whether dual variable values are computed for QCP models	1
+qcpdual	

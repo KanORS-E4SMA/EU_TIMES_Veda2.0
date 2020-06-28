@@ -1,0 +1,58 @@
+*Whether to scale objective, rhs and bounds of problem if they look odd (experimental)	0
+autoScale 0
+*Whether factorization biased towards U	LX
+biasLU LX
+*Whether to scale in barrier (and ordering speed)	off
+bscale	on
+*Whether to create basis for problem	off
+crash off
+*Whether to get a basic solution with the simplex algorithm after the barrier algorithm finished	on
+crossover on
+*Threshold for using dense factorization	-1
+denseThreshold	-1
+*Dual pivot choice algorithm	automatic
+dualPivot automatic
+*Which factorization to use	normal
+factorization normal
+*Whether to regularize barrier	off
+gamma on
+*Whether to try idiot crash	-1
+idiotCrash 1
+*Maximum number of iterations before stopping	GAMS iterlim
+**iterlim	
+*Whether to use KKT factorization in barrier	0
+KKT 1
+*Maximum number of iterations between refactorizations	200
+maxFactor
+*How many passes in presolve	5
+passPresolve 5
+*Whether to perturb the problem	1
+perturbation 1
+*Whether to presolve problem	on
+presolve on
+*Primal pivot choice algorithm	automatic
+primalPivot
+*Initially algorithm acts as if it costs this much to be infeasible	1e+10
+primalWeight 
+*Two-dimension pricing factor for Positive Edge criterion	-0.5
+psi
+*Random seed for Clp	1234567
+randomSeedClp
+Whether to scale problem	automatic
+scaling	
+*Threshold for using small factorization	-1
+smallFactorization	
+*Whether factorization treated as sparse	1
+sparseFactor
+*Whether to try sprint crash	-1	
+sprintCrash	
+*LP solver for root node	dual
+startalg barrier
+*How long a column to substitute for in presolve	3
+substitution
+*For an optimal solution no dual infeasibility may exceed this value	1e-07	
+tol_dual	
+*Tolerance to use in presolve	1e-08
+tol_presolve
+*For a feasible solution no primal infeasibility, i.e., constraint violation, may exceed this value	1e-07	
+tol_primal	

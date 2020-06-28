@@ -1,0 +1,18 @@
+Open JRC-EU-TIMES
+Download page: https://data.jrc.ec.europa.eu/collection/id-00287 
+Contact: JRC-DATA-ENERGY-UNION@ec.europa.eu
+
+This file explains the software needs.
+
+A TIMES model consists of two parts: (1) the TIMES database and (2) the ETSAP TIMES model generator or code. 
+The JRC-EU-TIMES database is open and contains data that are numeric parameters and 
+logic that are equations (relations) between different variables of the model that are not included in the ETSAP TIMES code. 
+The TIMES code is owned by ETSAP and is provided free of charge to anyone that signs an ETSAP letter of agreement. 
+The ETSAP TIMES code is not considered open source because it cannot be redistributed freely.
+
+To use the ETSAP TIMES code, third party software is required such as GAMS. 
+TIMES models are formulated in the algebraic modelling language GAMS. 
+The actual solution of the optimisation problem requires a numerical solver. 
+The JRC-EU-TIMES model is formulated as a linear programme and solved using CPLEX.
+
+A graphical representation is made in the file "Software needs JRC-EU-TIMES.jpg"

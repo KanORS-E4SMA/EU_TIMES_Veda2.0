@@ -1,0 +1,18 @@
+Following are some new elements introduced by JRC:
+-Renewable potentials from ENSPRESO
+-Simplified representation of existing energy system
+-Link with JRC-IDEES for power plants and CHP
+-Parametrisation of variable RES (see also "23 Variable RES script in R.txt")
+-Buildings module 
+-Link with FORECAST reference scenario for buildings
+-Heat pumps representation
+-Marine representation
+-Power2X
+-Various CCUS options
+-Hydrogen and storage
+-Nuclear representation
+-Cost evolution of Low Carbon Energy Technologies
+-Representation of the European Power Grid
+(DC power flow modeling and N − 1 security into JRC-EU-TIMES)
+-EE policies and overall target
+-Car CO2 standards

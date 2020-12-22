@@ -1,0 +1,12 @@
+scaind 1
+rerun yes
+iis yes
+lpmethod 4
+baralg 1
+barcrossalg 2
+barorder 0
+THREADS=7
+advind=0
+names no
+barstartalg 2
+solutiontype 2
